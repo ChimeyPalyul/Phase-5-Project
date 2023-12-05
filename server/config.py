@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
 from sqlalchemy import MetaData
 import secrets
 from dotenv import load_dotenv
@@ -15,12 +16,12 @@ load_dotenv()
 
 
 # deployed version uncomment below code, local version comment out below code
-# app = Flask(
-#     __name__,
-#     static_url_path='',
-#     static_folder='../client/dist',
-#     template_folder='../client/dist'
-# )
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/dist',
+    template_folder='../client/dist'
+)
 
 # Instantiate app, set attributes
 
@@ -29,7 +30,7 @@ load_dotenv()
 
 # Instantiate app, set attributes
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://budget_buddy_t31q_user:6lj1MxqTLtwVflg153tT5SJSrbG4oOcO@dpg-clnmef9jvg7s73a01qpg-a.oregon-postgres.render.com/budget_buddy_t31q'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.json.compact = False
 app.secret_key = secrets.token_hex(16)
