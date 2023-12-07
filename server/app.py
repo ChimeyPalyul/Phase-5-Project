@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # Standard library imports
 # Remote library imports
-from flask import request, session
+from flask import request, session, render_template
 from flask_restful import Resource
 # Local imports
 from config import app, db, api
@@ -213,6 +213,10 @@ if __name__ == '__main__':
     app.run(port=5555, debug=True)
 
 
+
+@app.route('/')
+def index():
+    return '<h1>Phase 4 Project Server</h1>'
 
 
 @app.route('/', defaults={'path': ''})
