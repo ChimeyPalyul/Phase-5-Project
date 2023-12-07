@@ -209,11 +209,6 @@ class Logout(Resource):
     
 api.add_resource(Logout, '/logout')
 # Views go here!
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
-
-
-
 @app.route('/')
 def index():
     return '<h1>Phase 4 Project Server</h1>'
