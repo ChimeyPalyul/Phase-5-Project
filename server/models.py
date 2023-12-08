@@ -21,7 +21,7 @@ class ExpenseModel(db.Model, SerializerMixin):
     category = db.relationship('CategoryModel', back_populates = 'expense')
     user = db.relationship('UserModel', back_populates = 'expenses' )
 
-    serialize_rules=('-category.expense',)
+    serialize_rules=('-category.expense','-user.expenses',)
 
     @validates('frequency')
     def validate_frequency(self, key,frequency):
@@ -43,7 +43,7 @@ class IncomeModel(db.Model, SerializerMixin):
 
     category = db.relationship('CategoryModel', back_populates = 'income')
     user = db.relationship('UserModel', back_populates = 'incomes' )
-    serialize_rules = ('-category.income',)
+    serialize_rules = ('-category.income', '-user.incomes',)
 
     @validates('frequency')
     def validate_frequency(self, key,frequency):
@@ -62,11 +62,13 @@ class UserModel(db.Model, SerializerMixin):
   username = db.Column(db.String, unique=True)
   _password_hash = db.Column(db.String)
 
-  income_id = db.Column(db.Integer, db.ForeignKey('incomes.id'),nullable = False)
-  expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable = False)
+  income_id = db.Column(db.Integer, db.ForeignKey('incomes.id'),nullable = True)
+  expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable = True)
 
   expenses = db.relationship('ExpenseModel', back_populates='user')
   incomes = db.relationship('IncomeModel', back_populates='user')
+
+  serialize_rules =('-expenses.user', '-incomes.user','-expenses.category', '-incomes.category')
 
   @validates('name')
   def validate_name(self, name, key):

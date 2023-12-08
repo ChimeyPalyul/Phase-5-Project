@@ -142,9 +142,9 @@ class Users(Resource):
             new_user = UserModel(
                  name = data['name'],
                 username = data['username'],
-                _password_hash = data['_password_hash'],
-                income_id = data['income_id'],
-                expense_id = data['expense_id']
+                _password_hash = data['password'],
+                income_id = 131,
+                expense_id = 131
             )
             db.session.add(new_user)
             db.session.commit()

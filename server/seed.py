@@ -15,17 +15,20 @@ from app import app
 from models import UserModel,ExpenseModel,CategoryModel,IncomeModel, db
 
 def create_users():
-    users = []
-    for _ in range(5):
-        a = UserModel(
-            username= fake.first_name(),
-            password_hash='testpassword',
-            name= fake.name(),
-            income_id = randint(1,5),
-            expense_id = randint(1,5),
-        )
-        users.append(a)
-    return users
+ users = []
+ for _ in range(3):
+    expense_id = randint(1,5)
+   
+    u = UserModel(
+    name = fake.name(),
+    username = fake.name(),
+    _password_hash = fake.password(),
+    income_id = randint(131,135),
+    expense_id = randint(131,135),
+    )
+    users.append(u)
+ return users
+
 
 def create_expenses():
    expenses = []
@@ -56,15 +59,17 @@ def create_incomes():
 def create_categories():
     categories = []
     for _ in range(3):
+        expense_id = randint(1,5)
         a = CategoryModel(
-            name = fake.word(),
-            description = fake.sentence(5),
-            parent_id= randint(1,5),
-            income_id = randint(1,5),
-            expense_id = randint(1,5),
+        name = fake.word(),
+        description = fake.sentence(5),
+        parent_id= randint(1,5),
+        income_id = randint(131,135),
+        expense_id = randint(131,135)
         )
         categories.append(a)
     return categories
+
 
 if __name__ == '__main__':
    fake = Faker()
@@ -77,11 +82,19 @@ if __name__ == '__main__':
        CategoryModel.query.delete()
        print('Tables Deleted')
        db.create_all()
+       db.session.commit()
        usr = create_users()
        inc = create_incomes()
        exp = create_expenses()
        cat = create_categories()
+       print(usr,inc,exp,cat)
+       db.session.add_all(inc)
+       db.session.commit()
+       db.session.add_all(exp)
+       db.session.commit()
        all_data = usr + inc + exp + cat
-       db.session.add_all(all_data)
+       db.session.add_all(cat)
+       db.session.commit()
+       db.session.add_all(usr)
        db.session.commit()
        print('finished seeding')
