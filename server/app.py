@@ -3,6 +3,7 @@
 # Remote library imports
 from flask import request, session, render_template
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 # Local imports
 from config import app, db, api
 # Add your model imports
@@ -138,17 +139,34 @@ class Users(Resource):
     
     def post(self):
         data = request.get_json()
+        print(f'142: {data.get("password")}')
+        name = data['name']
+        username = data['username']
+        password = data.get("password")
+        # income_id = 131,
+        # expense_id = 131
+        print(name)
         try:
             new_user = UserModel(
-                 name = data['name'],
-                username = data['username'],
-                _password_hash = data['password'],
-                income_id = 131,
-                expense_id = 131
+                name = name,
+                username = username,
+                # income_id = income_id,
+                # expense_id = expense_id
             )
-            db.session.add(new_user)
-            db.session.commit()
-            return new_user.to_dict(only=('name','username','_password_hash', 'income_id', 'expense_id')), 201
+            try:
+                print("Trying hash")
+                new_user.password_hash = password
+                print("Adding user to session...")
+                db.session.add(new_user)
+                print("Commiting session...")
+                print(new_user.name)
+                db.session.commit()
+                return new_user.to_dict(only=('name','username','password_hash', 'income_id', 'expense_id')), 200
+            except IntegrityError:
+                return {'error': '422 Unprocessable Entity'}, 422
+            # db.session.add(new_user)
+            # db.session.commit()
+            # return new_user.to_dict(only=('name','username','password', 'income_id', 'expense_id')), 201
         except ValueError as e:
             print(e.__str__())
             return{
@@ -175,11 +193,12 @@ api.add_resource(UsersById, '/users/<int:id>')
 class Login(Resource):
     def post(self):
         data = request.get_json()
-        username = data['username']
-        _password_hash = data['_password_hash']
-        user = UserModel.query.filter(username == username).first()
+        username = data.get('username')
+        password_hash = data.get('password')
+        user = UserModel.query.filter(UserModel.username == username).first()
+        print(user)
         if user:
-            if user.authenticate(_password_hash):
+            if user.authenticate(password_hash):
                 session['user_id'] = user.id
                 return user.to_dict(),200
             else:

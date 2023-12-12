@@ -7,6 +7,7 @@ from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
 from sqlalchemy import DateTime, select
+from werkzeug.security import check_password_hash
 
 class ExpenseModel(db.Model, SerializerMixin):
     __tablename__='expenses'
@@ -60,7 +61,10 @@ class UserModel(db.Model, SerializerMixin):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String)
   username = db.Column(db.String, unique=True)
-  _password_hash = db.Column(db.String)
+  _password_hash = db.Column(db.String, nullable=False)
+
+  def authenticate(self, password):
+       return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
 
   income_id = db.Column(db.Integer, db.ForeignKey('incomes.id'),nullable = True)
   expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable = True)
@@ -71,7 +75,7 @@ class UserModel(db.Model, SerializerMixin):
   serialize_rules =('-expenses.user', '-incomes.user','-expenses.category', '-incomes.category')
 
   @validates('name')
-  def validate_name(self, name, key):
+  def validate_name(self, key, name):
       if not name:
         raise ValueError('must be a name')
       return name
