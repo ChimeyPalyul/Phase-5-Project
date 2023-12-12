@@ -169,17 +169,30 @@ class UsersById(Resource):
         db.session.query.delete(user)
         db.session.commit()
         return "", 204
-    
 api.add_resource(UsersById, '/users/<int:id>')
+
+class UserIncomes(Resource):    
+    def get_incomes(self,id):
+        user = UserModel.query.filter_by(id = id).first()
+        return [income.to_dict for income in user.incomes], 200
+    
+api.add_resource(UserIncomes, '/users/<int:id>/incomes')
+    
+class UserExpenses(Resource):
+    def get_expenses(self,id):
+        user = UserModel.query.filter_by(id = id).first()
+        return [expense.to_dict() for expense in user.expenses], 200
+
+api.add_resource(UserExpenses, '/users/<int:id>/expenses')
 
 class Login(Resource):
     def post(self):
         data = request.get_json()
         username = data['username']
-        _password_hash = data['_password_hash']
-        user = UserModel.query.filter(username == username).first()
+        password_hash = data['password']
+        user = UserModel.query.filter(UserModel.username == username).first()
         if user:
-            if user.authenticate(_password_hash):
+            if user.authenticate(password_hash):
                 session['user_id'] = user.id
                 return user.to_dict(),200
             else:

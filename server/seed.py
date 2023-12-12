@@ -23,8 +23,8 @@ def create_users():
     name = fake.name(),
     username = fake.name(),
     _password_hash = fake.password(),
-    income_id = randint(131,135),
-    expense_id = randint(131,135),
+    income_id = randint(136,140),
+    expense_id = randint(136,140),
     )
     users.append(u)
  return users

@@ -17,6 +17,7 @@ class ExpenseModel(db.Model, SerializerMixin):
     date = db.Column(db.DateTime)
     description = db.Column(db.String)
     frequency = db.Column(db.String, nullable= False)
+   
     
 
     category = db.relationship('CategoryModel', back_populates = 'expense')
@@ -41,6 +42,7 @@ class IncomeModel(db.Model, SerializerMixin):
     date= db.Column(db.DateTime)
     description = db.Column(db.String)
     frequency = db.Column(db.String, nullable= False)
+    
 
     category = db.relationship('CategoryModel', back_populates = 'income')
     user = db.relationship('UserModel', back_populates = 'incomes' )
@@ -98,9 +100,9 @@ class UserModel(db.Model, SerializerMixin):
           password.encode('utf-8'))
       self._password_hash = password_hash.decode('utf-8')
 
-  @password_hash.expression
-  def password_hash(cls):
-      return cls._password_hash
+#   @password_hash.expression
+#   def password_hash(cls):
+#       return cls._password_hash
   
   @validates('_password_hash')
   def validate_password_hash(self, key, password_hash):
