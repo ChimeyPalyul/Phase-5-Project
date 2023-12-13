@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -11,20 +11,22 @@ import Login from './Pages/Login'
 import IncomeList from "./Pages/ManageIncomes./IncomeList";
 
 
+
 function App() {
-  const [users, setUsers] = useState([])
+  const [users, setUsers] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    fetch("/api/users")
-      .then((r) => r.json())
-      .then(setUsers)
+    fetch("/api/check_session")
+    .then((res) => {if(res.ok){
+      res.json().then((user) => {setUsers(user); setIsLoggedIn(true)})
+    }})
   }, []);
   //Navbar functionality
   const routes = createRoutesFromElements(
-    <Route path="/" element={<NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}>
+    <Route path="/" element={<NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setUsers={setUsers}/>}>
       <Route index element={<Home />} />
-      <Route path='/manage-incomes' element ={<IncomeList/>}/>
-      <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path='/manage-incomes' element ={<IncomeList users={users}/>}/>
+      <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setUsers={setUsers} setIsLoggedIn={setIsLoggedIn} />} />
     </Route>
   );
 

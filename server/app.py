@@ -79,7 +79,6 @@ class Incomes(Resource):
         try:
             new_income = IncomeModel(
                 amount = data['amount'],
-                date = data['date'],
                 description = data['description'],
                 frequency = data['frequency']
             )
@@ -91,7 +90,7 @@ class Incomes(Resource):
                 'errors': ['validation errors']
             }, 400
 
-api.add_resource(Incomes, '/income')
+api.add_resource(Incomes, '/incomes')
 
 class IncomesById(Resource):
     def get(self, id):
@@ -172,14 +171,16 @@ class UsersById(Resource):
 api.add_resource(UsersById, '/users/<int:id>')
 
 class UserIncomes(Resource):    
-    def get_incomes(self,id):
+    def get(self,id):
         user = UserModel.query.filter_by(id = id).first()
-        return [income.to_dict for income in user.incomes], 200
+        print(user.incomes.to_dict())
+        return user.incomes.to_dict(rules=("-user",)), 200
+        # return [income.to_dict for income in user.incomes], 200
     
 api.add_resource(UserIncomes, '/users/<int:id>/incomes')
     
 class UserExpenses(Resource):
-    def get_expenses(self,id):
+    def get(self,id):
         user = UserModel.query.filter_by(id = id).first()
         return [expense.to_dict() for expense in user.expenses], 200
 
@@ -206,7 +207,7 @@ api.add_resource(Login, "/login")
 
 class CheckSession(Resource):
     def get(self):
-        user = UserModel.query.filter_(UserModel.id == session.get('user_id')).first()
+        user = UserModel.query.filter(UserModel.id == session.get('user_id')).first()
         if user:
             return user.to_dict()
         else:

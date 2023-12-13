@@ -39,7 +39,7 @@ class IncomeModel(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Float)
-    date= db.Column(db.DateTime)
+    date= db.Column(db.DateTime, default=db.func.now())
     description = db.Column(db.String)
     frequency = db.Column(db.String, nullable= False)
     

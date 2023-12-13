@@ -3,10 +3,9 @@ import {useNavigate} from 'react-router-dom'
 import bcryptjs from 'bcryptjs';
 import NavBar from './NavBar';
 
-const Login = ({isLoggedIn,setIsLoggedIn}) =>{
+const Login = ({isLoggedIn,setIsLoggedIn, setUsers}) =>{
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    
     const[data,setData]= useState({})
     const navigate = useNavigate();
 
@@ -26,6 +25,7 @@ const Login = ({isLoggedIn,setIsLoggedIn}) =>{
         .then(res => res.json())
         .then(data => {
             setData(data)
+            setUsers(data)
             localStorage.setItem('user', JSON.stringify(data));
             setUsername('');
             setPassword('');
@@ -40,7 +40,6 @@ const Login = ({isLoggedIn,setIsLoggedIn}) =>{
     useEffect(() => {
         console.log(data)
         if (isLoggedIn){
-            // setIsLoggedIn(true);
             navigate("/");
         }
     },[data])

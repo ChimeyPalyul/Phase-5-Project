@@ -3,14 +3,23 @@ import { NavLink, useNavigate, Outlet } from "react-router-dom";
 
 
 
-function NavBar({isLoggedIn, setIsLoggedIn}) {
+function NavBar({isLoggedIn, setIsLoggedIn, setUsers}) {
   console.log(isLoggedIn);
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem('user');
     setIsLoggedIn(false);
+    fetch("/api/logout", {
+      method: "DELETE"
+    })
+    .then(res => {
+      setUsers(null); 
+      setIsLoggedIn(false);
+  })
     navigate("/login")
   }
+
+
   return (
     <h1 className="header">
     <div className="container">
