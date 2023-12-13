@@ -18,7 +18,6 @@ class Expenses(Resource):
         try:
             new_expense = ExpenseModel(
                 amount = data['amount'],
-                date = data['date'],
                 description = data['description'],
                 frequency = data['frequency']
             )
@@ -30,7 +29,7 @@ class Expenses(Resource):
                 'errors': ['validation errors']
             }, 400
 
-api.add_resource(Expenses, '/expense')
+api.add_resource(Expenses, '/expenses')
 
 class ExpensesById(Resource):
     def get(self, id):
@@ -141,7 +140,7 @@ class Users(Resource):
             new_user = UserModel(
                  name = data['name'],
                 username = data['username'],
-                _password_hash = data['password'],
+                password_hash = data['password'],
                 income_id = 131,
                 expense_id = 131
             )
@@ -175,15 +174,14 @@ class UserIncomes(Resource):
         user = UserModel.query.filter_by(id = id).first()
         print(user.incomes.to_dict())
         return user.incomes.to_dict(rules=("-user",)), 200
-        # return [income.to_dict for income in user.incomes], 200
-    
+       
 api.add_resource(UserIncomes, '/users/<int:id>/incomes')
     
 class UserExpenses(Resource):
     def get(self,id):
         user = UserModel.query.filter_by(id = id).first()
-        return [expense.to_dict() for expense in user.expenses], 200
-
+        return user.expenses.to_dict(rules=('-user',)),200
+        
 api.add_resource(UserExpenses, '/users/<int:id>/expenses')
 
 class Login(Resource):

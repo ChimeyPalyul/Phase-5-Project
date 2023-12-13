@@ -9,6 +9,7 @@ import Home from "./Pages/Home";
 import NavBar from "./Pages/NavBar";
 import Login from './Pages/Login'
 import IncomeList from "./Pages/ManageIncomes./IncomeList";
+import ExpenseList from "./Pages/ManageExpenses/ExpenseList";
 
 
 
@@ -25,6 +26,7 @@ function App() {
   const routes = createRoutesFromElements(
     <Route path="/" element={<NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setUsers={setUsers}/>}>
       <Route index element={<Home />} />
+      <Route path='/manage-expenses' element={<ExpenseList users={users}/>}/>
       <Route path='/manage-incomes' element ={<IncomeList users={users}/>}/>
       <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setUsers={setUsers} setIsLoggedIn={setIsLoggedIn} />} />
     </Route>
