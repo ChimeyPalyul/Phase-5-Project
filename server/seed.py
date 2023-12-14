@@ -12,7 +12,7 @@ fake = Faker()
 
 # Local imports
 from app import app
-from models import UserModel,ExpenseModel,CategoryModel,IncomeModel, db
+from models import UserModel,ExpenseModel,CategoryModel,IncomeModel,ExpenseCategory, db
 
 def create_users():
  users = []
@@ -22,9 +22,7 @@ def create_users():
     u = UserModel(
     name = fake.name(),
     username = fake.name(),
-    _password_hash = fake.password(),
-    income_id = randint(136,140),
-    expense_id = randint(136,140),
+    password_hash = fake.password(),
     )
     users.append(u)
  return users
@@ -64,11 +62,22 @@ def create_categories():
         name = fake.word(),
         description = fake.sentence(5),
         parent_id= randint(1,5),
-        income_id = randint(131,135),
-        expense_id = randint(131,135)
         )
         categories.append(a)
     return categories
+
+def create_expense_categories():
+    income_categories =[]
+    for _ in range(3):
+        expense_id = randint(178,182)
+        category_id = randint(54,56)
+        e = ExpenseCategory(
+        expense_id = expense_id,
+        category_id = category_id
+        )
+        income_categories.append(e)
+    return income_categories
+    
 
 
 if __name__ == '__main__':
@@ -80,6 +89,7 @@ if __name__ == '__main__':
        IncomeModel.query.delete()
        UserModel.query.delete()
        CategoryModel.query.delete()
+       ExpenseCategory.query.delete()
        print('Tables Deleted')
        db.create_all()
        db.session.commit()
@@ -87,6 +97,7 @@ if __name__ == '__main__':
        inc = create_incomes()
        exp = create_expenses()
        cat = create_categories()
+       expcat = create_expense_categories()
        print(usr,inc,exp,cat)
        db.session.add_all(inc)
        db.session.commit()
@@ -96,5 +107,7 @@ if __name__ == '__main__':
        db.session.add_all(cat)
        db.session.commit()
        db.session.add_all(usr)
+       db.session.commit()
+       db.session.add_all(expcat)
        db.session.commit()
        print('finished seeding')

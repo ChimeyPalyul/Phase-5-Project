@@ -19,7 +19,8 @@ class Expenses(Resource):
             new_expense = ExpenseModel(
                 amount = data['amount'],
                 description = data['description'],
-                frequency = data['frequency']
+                frequency = data['frequency'],
+                user_id = data['user_id'] 
             )
             db.session.add(new_expense)
             db.session.commit()
@@ -73,21 +74,7 @@ class Incomes(Resource):
         incomes = [income.to_dict()for income in IncomeModel.query.all()]
         return incomes, 200
     
-    def post(self):
-        data = request.get_json()
-        try:
-            new_income = IncomeModel(
-                amount = data['amount'],
-                description = data['description'],
-                frequency = data['frequency']
-            )
-            db.session.add(new_income)
-            db.session.commit()
-            return new_income.to_dict(only=('amount', 'date', 'description', 'frequency')),200
-        except ValueError:
-            return{
-                'errors': ['validation errors']
-            }, 400
+    
 
 api.add_resource(Incomes, '/incomes')
 
@@ -141,8 +128,6 @@ class Users(Resource):
                  name = data['name'],
                 username = data['username'],
                 password_hash = data['password'],
-                income_id = 131,
-                expense_id = 131
             )
             db.session.add(new_user)
             db.session.commit()
@@ -174,6 +159,23 @@ class UserIncomes(Resource):
         user = UserModel.query.filter_by(id = id).first()
         print(user.incomes.to_dict())
         return user.incomes.to_dict(rules=("-user",)), 200
+    
+    def post(self):
+        data = request.get_json()
+        try:
+            new_income = IncomeModel(
+                amount = data['amount'],
+                description = data['description'],
+                frequency = data['frequency'],
+                user_id = data['user_id'] 
+            )
+            db.session.add(new_income)
+            db.session.commit()
+            return new_income.to_dict(only=('amount', 'date', 'description', 'frequency')),200
+        except ValueError:
+            return{
+                'errors': ['validation errors']
+            }, 400
        
 api.add_resource(UserIncomes, '/users/<int:id>/incomes')
     

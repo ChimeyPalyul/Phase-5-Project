@@ -17,11 +17,13 @@ class ExpenseModel(db.Model, SerializerMixin):
     date = db.Column(db.DateTime, default=db.func.now())
     description = db.Column(db.String)
     frequency = db.Column(db.String, nullable= False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable = True)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'))
+    
    
     
-
-    category = db.relationship('CategoryModel', back_populates = 'expense')
     user = db.relationship('UserModel', back_populates = 'expenses' )
+    expense_category= db.relationship('ExpenseCategory', back_populates='expense')
 
     serialize_rules=('-category.expense','-user.expenses',)
 
@@ -42,9 +44,8 @@ class IncomeModel(db.Model, SerializerMixin):
     date= db.Column(db.DateTime, default=db.func.now())
     description = db.Column(db.String)
     frequency = db.Column(db.String, nullable= False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable = True)
     
-
-    category = db.relationship('CategoryModel', back_populates = 'income')
     user = db.relationship('UserModel', back_populates = 'incomes' )
     serialize_rules = ('-category.income', '-user.incomes',)
 
@@ -56,6 +57,7 @@ class IncomeModel(db.Model, SerializerMixin):
         return frequency
 
 
+    
 
 class UserModel(db.Model, SerializerMixin):
   __tablename__ = 'users'
@@ -68,10 +70,7 @@ class UserModel(db.Model, SerializerMixin):
   def authenticate(self, password):
        return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
 
-  income_id = db.Column(db.Integer, db.ForeignKey('incomes.id'),nullable = True)
-  expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable = True)
-
-  expenses = db.relationship('ExpenseModel', back_populates='user')
+  expenses  = db.relationship('ExpenseModel', back_populates='user')
   incomes = db.relationship('IncomeModel', back_populates='user')
 
   serialize_rules =('-expenses.user', '-incomes.user','-expenses.category', '-incomes.category')
@@ -122,11 +121,10 @@ class CategoryModel(db.Model,SerializerMixin):
     description = db.Column(db.String)
     parent_id = db.Column(db.Integer)
 
-    income_id = db.Column(db.Integer, db.ForeignKey('incomes.id'), nullable=False)
-    expense_id = db.Column(db.Integer, db.ForeignKey('expenses.id'), nullable=False)
+    
 
-    expense = db.relationship('ExpenseModel', back_populates = 'category')
-    income = db.relationship('IncomeModel', back_populates = 'category')
+    expense_category = db.relationship('ExpenseCategory', back_populates = 'category')
+    
 
     serialize_rules=('-expense.category', '-income.category',)
 
@@ -135,5 +133,16 @@ class CategoryModel(db.Model,SerializerMixin):
         if not name:
             raise ValueError('must be a name')
         return name
+    
+
+class ExpenseCategory(db.Model, SerializerMixin):
+    __tablename__='expense-category'
+    id = db.Column(db.Integer, primary_key=True)
+    expense_id=db.Column(db.Integer, db.ForeignKey('expenses.id'))
+    category_id=db.Column(db.Integer, db.ForeignKey('categories.id'))
+
+    expense =db.relationship('ExpenseModel', back_populates='expense_category')
+    category=db.relationship('CategoryModel', back_populates='expense_category')
+    
 
 
