@@ -26,8 +26,8 @@ function App() {
   const routes = createRoutesFromElements(
     <Route path="/" element={<NavBar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} setUsers={setUsers}/>}>
       <Route index element={<Home />} />
-      <Route path='/manage-expenses' element={<ExpenseList users={users}/>}/>
-      <Route path='/manage-incomes' element ={<IncomeList users={users}/>}/>
+      <Route path='/manage-expenses' element={<ExpenseList users={users} setUsers={setUsers}/>}/>
+      <Route path='/manage-incomes' element ={<IncomeList users={users} setUsers={setUsers}/>}/>
       <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setUsers={setUsers} setIsLoggedIn={setIsLoggedIn} />} />
     </Route>
   );
