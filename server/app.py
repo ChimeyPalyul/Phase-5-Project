@@ -177,14 +177,32 @@ class UserIncomes(Resource):
                 'errors': ['validation errors']
             }, 400
        
-api.add_resource(UserIncomes, '/users/<int:id>/incomes')
+api.add_resource(UserIncomes, '/users/incomes')
     
 class UserExpenses(Resource):
     def get(self,id):
         user = UserModel.query.filter_by(id = id).first()
         return user.expenses.to_dict(rules=('-user',)),200
+    
+    def post(self):
+        data = request.get_json()
+        try:
+            new_income = IncomeModel(
+                amount = data['amount'],
+                description = data['description'],
+                frequency = data['frequency'],
+                user_id = data['user_id'] 
+            )
+            db.session.add(new_income)
+            db.session.commit()
+
+            return new_income.to_dict(only=('amount', 'date', 'description', 'frequency')),200
+        except ValueError:
+            return{
+                'errors': ['validation errors']
+            }, 400
         
-api.add_resource(UserExpenses, '/users/<int:id>/expenses')
+api.add_resource(UserExpenses, '/users/expenses')
 
 class Login(Resource):
     def post(self):
