@@ -74,6 +74,23 @@ class Incomes(Resource):
         incomes = [income.to_dict()for income in IncomeModel.query.all()]
         return incomes, 200
     
+    def post(self):
+        data = request.get_json()
+        try:
+            new_income = IncomeModel(
+                amount = data['amount'],
+                description = data['description'],
+                frequency = data['frequency'],
+                user_id = data['user_id'] 
+            )
+            db.session.add(new_income)
+            db.session.commit()
+            return new_income.to_dict(only=('id','amount', 'date', 'description','frequency')),200
+        except ValueError:
+            return{
+                'errors': ['validation errors']
+            }, 400
+    
     
 
 api.add_resource(Incomes, '/incomes')
@@ -171,7 +188,7 @@ class UserIncomes(Resource):
             )
             db.session.add(new_income)
             db.session.commit()
-            return new_income.to_dict(only=('amount', 'date', 'description', 'frequency')),200
+            return new_income.to_dict(only=('id','amount', 'date', 'description', 'frequency')),200
         except ValueError:
             return{
                 'errors': ['validation errors']

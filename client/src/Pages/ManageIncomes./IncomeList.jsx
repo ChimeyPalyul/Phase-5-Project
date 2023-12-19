@@ -50,7 +50,7 @@ useEffect(() => {
     .then(data =>{
         console.log(data)
         const updatedUser = {...users}
-        updatedUser.incomes.push(data)
+        updatedUser.incomes = [...updatedUser.incomes,data]
         setIncomes([...incomes, data]),
         setUsers(updatedUser)
         setNewIncome({
@@ -76,6 +76,10 @@ function handleDelete(deletedIncome){
   const updateUser = {...users}
   updateUser.incomes = updateUser.incomes.filter(income => income.id != deletedIncome.id)
   setUsers(updateUser)
+  console.log(updateUser)
+  updatedIncomes = incomes.filter(income => income.id != deletedIncome.id);
+  console.log(updatedIncomes)
+  setIncomes(updatedIncomes)
 
 }
 
