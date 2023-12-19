@@ -24,7 +24,7 @@ class Expenses(Resource):
             )
             db.session.add(new_expense)
             db.session.commit()
-            return new_expense.to_dict(only=('amount', 'date', 'description','frequency')),200
+            return new_expense.to_dict(only=('id','amount', 'date', 'description','frequency')),200
         except ValueError:
             return{
                 'errors': ['validation errors']
@@ -187,16 +187,16 @@ class UserExpenses(Resource):
     def post(self):
         data = request.get_json()
         try:
-            new_income = IncomeModel(
+            new_expense = ExpenseModel(
                 amount = data['amount'],
                 description = data['description'],
                 frequency = data['frequency'],
                 user_id = data['user_id'] 
             )
-            db.session.add(new_income)
+            db.session.add(new_expense)
             db.session.commit()
 
-            return new_income.to_dict(only=('amount', 'date', 'description', 'frequency')),200
+            return new_expense.to_dict(only=('id','amount', 'date', 'description', 'frequency')),200
         except ValueError:
             return{
                 'errors': ['validation errors']

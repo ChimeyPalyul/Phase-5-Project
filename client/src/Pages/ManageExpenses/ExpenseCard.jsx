@@ -6,6 +6,7 @@ function ExpenseCard({
     onUpdate,
     users
 }){
+    console.log(expense)
     const [expenseStatus, setExpenseStatus] = useState(true)
     const[form, setForm] = useState({
         frequency: '',
@@ -32,7 +33,6 @@ function ExpenseCard({
     }
 
     function handleExpenseDelete(expense){
-        console.log(expense)
         fetch(`/api/expense/${expense.id}`,{
             method:"DELETE",
         })

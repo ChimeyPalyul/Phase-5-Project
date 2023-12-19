@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ExpenseCard from './ExpenseCard';
 
-const ExpenseList = ({users}) => {
+const ExpenseList = ({users, setUsers}) => {
  const [expenses, setExpenses] = useState([]);
  const[formStatus, setFormStatus] = useState(false)
 
@@ -12,9 +12,10 @@ const ExpenseList = ({users}) => {
     user_id: users.id
  });
 console.log(users)
+console.log(expenses)
 
 useEffect(() => {
-    fetch(`/users/${users.id}/expenses`)
+    fetch(`/users/${users.id}`)
       .then((res) => res.json())
       .then((data) => setExpenses(data));
     }, [expenses]);
@@ -48,7 +49,10 @@ useEffect(() => {
     .then(res => res.json())
     .then(data =>{
         console.log(data)
+        const updatedUser ={...users}
+        updatedUser.expenses = [...updatedUser.expenses,data]
         setExpenses([...expenses, data]),
+        setUsers(updatedUser)
         setNewExpense({
             frequency:'',
             description:'',
@@ -63,15 +67,19 @@ useEffect(() => {
  function handleFormStatus(){
     setFormStatus(!formStatus)
  }
-console.log(users.expenses)
 
 
 
 function handleDelete(deletedExpense){
-    const updatedExpense = expenses.filter(
-        (event) => event.id !== deletedExpense.id
-    );
-    setExpenses(updatedExpense)
+    console.log(deletedExpense)
+    console.log(expenses)
+    const updateUser={...users}
+    updateUser.expenses = updateUser.expenses.filter(expense => expense.id != deletedExpense.id)
+    setUsers(updateUser)
+    console.log(updateUser)
+    updatedExpenses = expenses.filter(expense => expense.id != deletedExpense.id);
+    console.log(updatedExpenses)
+    setExpenses(updatedExpenses)
 }
 
 const expenseFormButton = formStatus ? 'Cancel' : 'Add New Expense'

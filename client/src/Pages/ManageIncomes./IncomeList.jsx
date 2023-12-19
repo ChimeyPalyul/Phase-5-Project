@@ -15,7 +15,6 @@ console.log(users)
 console.log(incomes)
 
 useEffect(() => {
-    // Fetch the updated list of incomes
     fetch(`/incomes/${users.id}`)
       .then((res) => res.json())
       .then((data) => setIncomes(data));
@@ -74,14 +73,9 @@ useEffect(() => {
 function handleDelete(deletedIncome){
   console.log(deletedIncome)
   console.log(incomes)
-  
-    // const updatedIncome = incomes.filter(
-    //     (event) => event.id !== deletedIncome.id
-    // );
-    // setIncomes(updatedIncome)
-    const updateUser = {...users}
-    updateUser.incomes = updateUser.incomes.filter(income => income.id != deletedIncome.id)
-    setUsers(updateUser)
+  const updateUser = {...users}
+  updateUser.incomes = updateUser.incomes.filter(income => income.id != deletedIncome.id)
+  setUsers(updateUser)
 
 }
 
