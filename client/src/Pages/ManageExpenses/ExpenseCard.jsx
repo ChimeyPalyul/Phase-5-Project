@@ -23,7 +23,6 @@ function ExpenseCard({
             [e.target.name] : e.target.value,
         });
     }
-    console.log(expenses)
     function handleExpenseUpdate() {
         console.log(expenses)
         fetch(`/api/expense/${expenses.id}`, { 
