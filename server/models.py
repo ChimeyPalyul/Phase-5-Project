@@ -129,10 +129,13 @@ class CategoryModel(db.Model,SerializerMixin):
     serialize_rules=('-expense.category', '-income.category',)
 
     @validates('name')
-    def validate_name(self, key,name):
-        if not name:
-            raise ValueError('must be a name')
+    def validate_name(self, key, name):
+        n = ['Eating Expense', 'Living Expense',  'Transportation Expense', 'Investment', 'Recreational Expense', 'Health Expense', 'Other']
+        if name not in n:
+            raise ValueError('Must be an approved category')
         return name
+
+   
     
 
 class ExpenseCategory(db.Model, SerializerMixin):

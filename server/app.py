@@ -56,7 +56,7 @@ class ExpensesById(Resource):
                 "error": "validation errors"
             }, 400
         
-        return expense.to_dict(only=('amount', 'date','description')), 200
+        return expense.to_dict(only=('id', 'amount', 'date','description', 'frequency')), 200
     
     def delete(self,id):
         expense = ExpenseModel.query.filter_by(id=id).first()
@@ -119,7 +119,7 @@ class IncomesById(Resource):
                 "error": "validation errors"
             }, 400
         
-        return income.to_dict(only=('amount', 'date','description')), 200
+        return income.to_dict(only=('id','amount', 'date','description')), 200
     
     def delete(self,id):
         income = IncomeModel.query.filter_by(id=id).first()
@@ -148,7 +148,7 @@ class Users(Resource):
             )
             db.session.add(new_user)
             db.session.commit()
-            return new_user.to_dict(only=('name','username','_password_hash', 'income_id', 'expense_id')), 201
+            return new_user.to_dict(only=('name','username','_password_hash')), 201
         except ValueError as e:
             print(e.__str__())
             return{

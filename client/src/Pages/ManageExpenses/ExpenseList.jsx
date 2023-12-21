@@ -4,12 +4,15 @@ import ExpenseCard from './ExpenseCard';
 const ExpenseList = ({users, setUsers}) => {
  const [expenses, setExpenses] = useState([]);
  const[formStatus, setFormStatus] = useState(false)
+ console.log(typeof(expenses))
+ console.log(setUsers)
 
  const[newExpense, setNewExpense]=useState({
     frequency: '',
     description: '',
     amount: '',
-    user_id: users.id
+    user_id: users.id,
+    category_id:''
  });
 console.log(users)
 console.log(expenses)
@@ -57,7 +60,8 @@ useEffect(() => {
             frequency:'',
             description:'',
             amount: '',
-            user_id: ''
+            user_id: '',
+            category_id: ''
         });
     })
     .catch(error => console.error('Error:', error));
@@ -124,6 +128,15 @@ return (
                   onChange={handleNewExpenseChange}
                 />
               </label>
+              <label for="expense-category">Category:</label>
+              <select id="expense-category" name="expense_category">
+                <option value="">Please select a category</option>
+                <option value="Living Expense">Living Expense</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Investment">Investment</option>
+                <option value="Recreation">Recreation</option>
+                <option value="Other">Other</option>
+              </select>
               <input type="submit" value="Add Expense" />
             </form>
           )}
@@ -133,9 +146,11 @@ return (
                 <ExpenseCard
                   key={users.expenses[key].id}
                   handleDelete={handleDelete}
-                  expense={users.expenses[key]}
+                  expenses={users.expenses[key]}
+                  setExpenses={setExpenses}
                   onUpdate={handleUpdate}
                   users={users}
+                  setUsers={setUsers}
                 />
               ))}
             </>

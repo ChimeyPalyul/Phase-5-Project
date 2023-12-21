@@ -10,12 +10,14 @@ import NavBar from "./Pages/NavBar";
 import Login from './Pages/Login'
 import IncomeList from "./Pages/ManageIncomes./IncomeList";
 import ExpenseList from "./Pages/ManageExpenses/ExpenseList";
+import IncomeToExpenses from "./Pages/IncomeToExpense";
 
 
 
 function App() {
   const [users, setUsers] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log(typeof(users))
   useEffect(() => {
     fetch("/api/check_session")
     .then((res) => {if(res.ok){
@@ -29,6 +31,7 @@ function App() {
       <Route path='/manage-expenses' element={<ExpenseList users={users} setUsers={setUsers}/>}/>
       <Route path='/manage-incomes' element ={<IncomeList users={users} setUsers={setUsers}/>}/>
       <Route path="/login" element={<Login isLoggedIn={isLoggedIn} setUsers={setUsers} setIsLoggedIn={setIsLoggedIn} />} />
+      <Route path="/income-to-expenses" element={<IncomeToExpenses users={users} setUsers={setUsers}/>} />
     </Route>
   );
 

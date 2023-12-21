@@ -15,7 +15,7 @@ console.log(users)
 console.log(incomes)
 
 useEffect(() => {
-    fetch(`/incomes/${users.id}`)
+    fetch(`/users/${users.id}`)
       .then((res) => res.json())
       .then((data) => setIncomes(data));
     }, [incomes]);
@@ -134,9 +134,10 @@ return (
                 <IncomeCard
                   key={users.incomes[key].id}
                   handleDelete={handleDelete}
-                  income={users.incomes[key]}
+                  incomes={users.incomes[key]}
                   onUpdate={handleUpdate}
                   users={users}
+                  setUsers={setUsers}
                 />
               ))}
             </>

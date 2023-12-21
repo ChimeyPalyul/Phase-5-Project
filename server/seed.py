@@ -55,29 +55,30 @@ def create_incomes():
     return incomes
 
 def create_categories():
-    categories = []
-    for _ in range(3):
-        expense_id = randint(1,5)
-        a = CategoryModel(
-        name = fake.word(),
-        description = fake.sentence(5),
-        parent_id= randint(1,5),
-        )
-        categories.append(a)
-    return categories
+  # Define your list of desired categories
+  categories = [
+    CategoryModel(name="Eating Expense", description="Groceries, restaurants, dining expenses"),
+    CategoryModel(name="Living Expense", description="Rent, mortgage, utility bills, etc"),
+    CategoryModel(name="Transportation Expense", description="Buses, cars, car payments, travel costs, gasoline"),
+    CategoryModel(name="Investment", description="Mortgage, stock purchases, schooling"),
+    CategoryModel(name="Recreational Expense", description="Movies, concerts, hobbies"),
+    CategoryModel(name='Health Expense', description='minor and major surgeries, gym fees, etc'),
+    CategoryModel(name="Other", description="Other"),
+    ]
+  return categories
 
 def create_expense_categories():
-    income_categories =[]
+    expense_category = []
     for _ in range(3):
-        expense_id = randint(178,182)
-        category_id = randint(54,56)
+        expense_id = randint(178, 182)
+        category_id = randint(54, 56)
         e = ExpenseCategory(
-        expense_id = expense_id,
-        category_id = category_id
+            expense_id=expense_id,
+            category_id=category_id
         )
-        income_categories.append(e)
-    return income_categories
-    
+        expense_category.append(e)
+    return expense_category
+
 
 
 if __name__ == '__main__':
@@ -98,12 +99,11 @@ if __name__ == '__main__':
        exp = create_expenses()
        cat = create_categories()
        expcat = create_expense_categories()
-       print(usr,inc,exp,cat)
+       print(usr,inc,exp,cat, expcat)
        db.session.add_all(inc)
        db.session.commit()
        db.session.add_all(exp)
        db.session.commit()
-       all_data = usr + inc + exp + cat
        db.session.add_all(cat)
        db.session.commit()
        db.session.add_all(usr)
