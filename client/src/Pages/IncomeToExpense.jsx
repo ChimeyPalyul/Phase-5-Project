@@ -63,7 +63,7 @@ const IncomeToExpenses = ({ users }) => {
           });
           console.log(totalExpensesByCategory)
           // Create the data for the pie chart
-          const labels = [`Incomes:${totalIncome}`, `Expenses: ${totalExpense}`, `Net Income: ${netIncome}`];
+          const labels = [ `Net Income: ${netIncome}` ].concat(Object.keys(totalExpensesByCategory).map(category => `Expense: ${category}`));
         
             const data = [netIncome].concat(Object.values(totalExpensesByCategory));
             console.log(data)
