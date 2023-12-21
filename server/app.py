@@ -20,11 +20,12 @@ class Expenses(Resource):
                 amount = data['amount'],
                 description = data['description'],
                 frequency = data['frequency'],
-                user_id = data['user_id'] 
+                user_id = data['user_id'],
+                category_id = data['category_id']
             )
             db.session.add(new_expense)
             db.session.commit()
-            return new_expense.to_dict(only=('id','amount', 'date', 'description','frequency')),200
+            return new_expense.to_dict(only=('id','amount', 'date', 'description','frequency', 'category_id',)),200
         except ValueError:
             return{
                 'errors': ['validation errors']
@@ -56,7 +57,7 @@ class ExpensesById(Resource):
                 "error": "validation errors"
             }, 400
         
-        return expense.to_dict(only=('id', 'amount', 'date','description', 'frequency')), 200
+        return expense.to_dict(only=('id', 'amount', 'date','description', 'frequency', 'category_id',)), 200
     
     def delete(self,id):
         expense = ExpenseModel.query.filter_by(id=id).first()
@@ -68,6 +69,13 @@ class ExpensesById(Resource):
         return "", 204
 
 api.add_resource(ExpensesById, '/expense/<int:id>')
+
+class Categories(Resource):
+    def get(self):
+        categories = [category.to_dict() for category in CategoryModel.query.all()]
+        return categories, 200
+    
+api.add_resource(Categories, '/categories')
 
 class Incomes(Resource):
     def get(self):
@@ -119,7 +127,7 @@ class IncomesById(Resource):
                 "error": "validation errors"
             }, 400
         
-        return income.to_dict(only=('id','amount', 'date','description')), 200
+        return income.to_dict(only=('id','amount', 'date','description', 'frequency',)), 200
     
     def delete(self,id):
         income = IncomeModel.query.filter_by(id=id).first()
@@ -208,12 +216,13 @@ class UserExpenses(Resource):
                 amount = data['amount'],
                 description = data['description'],
                 frequency = data['frequency'],
-                user_id = data['user_id'] 
+                user_id = data['user_id'],
+                category_id = data['category_id']
             )
             db.session.add(new_expense)
             db.session.commit()
 
-            return new_expense.to_dict(only=('id','amount', 'date', 'description', 'frequency')),200
+            return new_expense.to_dict(only=('id','amount', 'date', 'description', 'frequency', 'user_id', 'category_id')),200
         except ValueError:
             return{
                 'errors': ['validation errors']

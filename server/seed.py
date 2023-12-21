@@ -17,7 +17,7 @@ from models import UserModel,ExpenseModel,CategoryModel,IncomeModel,ExpenseCateg
 def create_users():
  users = []
  for _ in range(3):
-    expense_id = randint(1,5)
+    # expense_id = randint(1,5)
    
     u = UserModel(
     name = fake.name(),
@@ -70,8 +70,8 @@ def create_categories():
 def create_expense_categories():
     expense_category = []
     for _ in range(3):
-        expense_id = randint(178, 182)
-        category_id = randint(54, 56)
+        expense_id = randint(230,234)
+        category_id = randint(57,63)
         e = ExpenseCategory(
             expense_id=expense_id,
             category_id=category_id
@@ -86,11 +86,10 @@ if __name__ == '__main__':
    with app.app_context():
        print("Starting seed...")
        print("Deleting tables...")
+       ExpenseCategory.query.delete()
        ExpenseModel.query.delete()
        IncomeModel.query.delete()
        UserModel.query.delete()
-       CategoryModel.query.delete()
-       ExpenseCategory.query.delete()
        print('Tables Deleted')
        db.create_all()
        db.session.commit()
@@ -103,8 +102,6 @@ if __name__ == '__main__':
        db.session.add_all(inc)
        db.session.commit()
        db.session.add_all(exp)
-       db.session.commit()
-       db.session.add_all(cat)
        db.session.commit()
        db.session.add_all(usr)
        db.session.commit()

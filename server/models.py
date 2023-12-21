@@ -24,8 +24,9 @@ class ExpenseModel(db.Model, SerializerMixin):
     
     user = db.relationship('UserModel', back_populates = 'expenses' )
     expense_category= db.relationship('ExpenseCategory', back_populates='expense')
+    category = db.relationship("CategoryModel", back_populates="expenses")
 
-    serialize_rules=('-category.expense','-user.expenses',)
+    serialize_rules=('-expense_category.expense','-user.expenses','-category.expenses')
 
     @validates('frequency')
     def validate_frequency(self, key,frequency):
@@ -47,7 +48,7 @@ class IncomeModel(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'),nullable = True)
     
     user = db.relationship('UserModel', back_populates = 'incomes' )
-    serialize_rules = ('-category.income', '-user.incomes',)
+    serialize_rules = ('-user.incomes',)
 
     @validates('frequency')
     def validate_frequency(self, key,frequency):
@@ -73,7 +74,7 @@ class UserModel(db.Model, SerializerMixin):
   expenses  = db.relationship('ExpenseModel', back_populates='user')
   incomes = db.relationship('IncomeModel', back_populates='user')
 
-  serialize_rules =('-expenses.user', '-incomes.user','-expenses.category', '-incomes.category')
+  serialize_rules =('-expenses.user', '-incomes.user',)
 
   @validates('name')
   def validate_name(self, key, name):
@@ -124,9 +125,10 @@ class CategoryModel(db.Model,SerializerMixin):
     
 
     expense_category = db.relationship('ExpenseCategory', back_populates = 'category')
+    expenses = db.relationship("ExpenseModel", back_populates="category")
     
 
-    serialize_rules=('-expense.category', '-income.category',)
+    serialize_rules=("-expense_category.category","-expenses.category")
 
     @validates('name')
     def validate_name(self, key, name):
@@ -146,6 +148,8 @@ class ExpenseCategory(db.Model, SerializerMixin):
 
     expense =db.relationship('ExpenseModel', back_populates='expense_category')
     category=db.relationship('CategoryModel', back_populates='expense_category')
+
+    serialize_rules = ("-expense.expense_category","-category.expense_category",)
     
 
 
